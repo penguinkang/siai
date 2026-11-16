@@ -1,0 +1,78 @@
+[
+  {
+    "project": "sklearn",
+    "baseline": 0.75,
+    "proposed": 0.8666666666666667,
+    "accepted": true,
+    "final_test": 0.8666666666666667,
+    "proposal": {
+      "lever": "depth",
+      "value": 4,
+      "hypothesis": "Test a larger capacity or update rate",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "expected_effect": "Potential reward increase",
+      "verification": "Compare fixed search split"
+    },
+    "proposer": "deterministic contract fixture",
+    "seed": 0
+  },
+  {
+    "project": "dl",
+    "baseline": 0.4749999940395355,
+    "proposed": 0.8500000238418579,
+    "accepted": true,
+    "final_test": 0.8999999761581421,
+    "proposal": {
+      "lever": "learning_rate",
+      "value": 0.02,
+      "hypothesis": "Test a larger capacity or update rate",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "expected_effect": "Potential reward increase",
+      "verification": "Compare fixed search split"
+    },
+    "proposer": "deterministic contract fixture",
+    "seed": 0
+  },
+  {
+    "project": "transformer",
+    "baseline": 0.4000000059604645,
+    "proposed": 0.949999988079071,
+    "accepted": true,
+    "final_test": 0.9750000238418579,
+    "proposal": {
+      "lever": "learning_rate",
+      "value": 0.02,
+      "hypothesis": "Test a larger capacity or update rate",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "expected_effect": "Potential reward increase",
+      "verification": "Compare fixed search split"
+    },
+    "proposer": "deterministic contract fixture",
+    "seed": 0
+  },
+  {
+    "project": "lm",
+    "baseline": -1.8212867975234985,
+    "proposed": -1.650649070739746,
+    "accepted": true,
+    "final_test": -1.6799243688583374,
+    "proposal": {
+      "lever": "learning_rate",
+      "value": 0.003,
+      "hypothesis": "Test a larger capacity or update rate",
+      "evidence_ids": [
+        "baseline"
+      ],
+      "expected_effect": "Potential reward increase",
+      "verification": "Compare fixed search split"
+    },
+    "proposer": "deterministic contract fixture",
+    "seed": 0
+  }
+]

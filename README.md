@@ -100,7 +100,27 @@ SIAI into that environment. Run backends in separate processes because Unsloth
 patches shared training libraries. Dependencies are optional and not pinned yet:
 there is no verified dependency compatibility matrix for this prototype.
 
-The development branch `dev/micro-projects` contains sample training projects,
-backend smoke scripts, measured results and environment locks. These assets are
-excluded from `master` and release artifacts. The core adapter has contract-test
-coverage; backend training validation is maintained on that development branch.
+```sh
+python examples/train_backend.py trl --output trial-trl
+python examples/train_backend.py unsloth --output trial-unsloth
+```
+
+These commands download a model and perform two training steps. The example
+uses negative evaluation loss solely as a smoke-test reward. Plain TRL performs
+full fine-tuning and Unsloth uses LoRA; these runs test API interchangeability,
+not equivalent training performance.
+
+Validation so far: seven dependency-free tests pass, including both backend
+construction paths using test doubles, feedback extraction and invalid-config
+rejection. Actual framework imports, training and checkpoint reload have **not**
+been validated: this environment has no torch, TRL, Unsloth or datasets installed.
+The scripts provide the real training checks to run in provisioned environments;
+plug-and-train compatibility remains provisional until those pass.
+
+## Four actual end-to-end micro projects
+
+See [examples/micro](examples/micro/README.md) for CPU-runnable sklearn, MLP,
+transformer encoder and tiny-LM fine-tuning projects. Real runs and resolved
+versions are recorded there. These supersede the earlier statement that no
+training dependencies are installed: sklearn/PyTorch/TRL training now runs
+locally; actual Unsloth training and the generic SFTAdapter remain unverified.

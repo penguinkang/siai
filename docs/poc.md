@@ -63,7 +63,7 @@ negative results. Effectiveness is an empirical milestone, not guaranteed by a
 successful smoke test. GPU training and provider integration remain outstanding.
 
 Update: both backend factories and a shared SFTAdapter are now implemented in
-siai.training, with real-training smoke scripts maintained on dev/micro-projects.
+siai.training, with a real-training smoke script in examples/train_backend.py.
 Both construction paths pass mocked contract tests. Real training compatibility
 is pending provisioned backend environments; this supersedes the earlier
 statement that no adapter exists. Neither backend has a verified version pin yet.
