@@ -48,6 +48,7 @@ print(result.best.config)
 - [Improvement-loop concepts](docs/concepts/improvement-loop.md)
 - [Intelligent proposer guide](docs/guides/proposer.md)
 - [TRL and Unsloth integration](docs/guides/training.md)
+- [End-to-end improvement workflow](docs/guides/workflow.md)
 - [API reference](docs/reference/core.md)
 - [Research and positioning](docs/research.md)
 

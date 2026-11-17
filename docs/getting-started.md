@@ -94,7 +94,8 @@ winner.
 
 For automated selection and journaling, pass a candidate-producing callback to
 [`Experiment`](reference/core.md#experiment). For language-model SFT,
-continue with [Connect a trainer](guides/training.md).
+continue with [Connect a trainer](guides/training.md), then
+[Run the full loop](guides/workflow.md).
 
 ## What you have built
 

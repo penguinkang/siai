@@ -38,9 +38,10 @@ such as TRL and Unsloth are optional and must be installed in their supported
 environments.
 
 !!! note "Development status"
-    SIAI 0.1.0 is a prototype. The core contracts and local experiment runner are
-    implemented. Real-provider proposal evaluation and full TRL/Unsloth training
-    validation are active milestones. No benchmark superiority is claimed.
+    SIAI 0.1.0 is a prototype. The contracts, local experiment runner, and full
+    trainer-to-proposer workflow are implemented. Real-provider proposal
+    evaluation and full TRL/Unsloth training validation are active milestones.
+    No benchmark superiority is claimed.
 
 ## A complete first experiment
 
@@ -88,4 +89,3 @@ when a proposal is worse, and stops before exceeding its budget.
 Your application owns the trainer, task scorer, data splits, model provider, and
 artifact storage. This is deliberate: a self-improvement claim is only meaningful
 when the metric and evaluation boundary remain visible and reproducible.
-

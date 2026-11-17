@@ -3,5 +3,7 @@ from .core import Candidate, Experiment, Result
 
 __all__ = ["Candidate", "Experiment", "Result"]
 from .proposer import ModelCard, Observation, ProposalRequest, Proposal, IntelligentProposer
+from .workflow import ImprovementLoop, ImprovementResult
 
 __all__ += ['ModelCard', 'Observation', 'ProposalRequest', 'Proposal', 'IntelligentProposer']
+__all__ += ["ImprovementLoop", "ImprovementResult"]

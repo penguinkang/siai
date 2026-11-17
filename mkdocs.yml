@@ -39,10 +39,12 @@ nav:
       - Design a model card: concepts/model-card.md
       - Build a proposer: guides/proposer.md
       - Connect a trainer: guides/training.md
+      - Run the full loop: guides/workflow.md
   - Reference:
       - Core experiment API: reference/core.md
       - Proposer API: reference/proposer.md
       - Training API: reference/training.md
+      - Improvement workflow API: reference/workflow.md
       - Contracts and limitations: design.md
   - Project:
       - v0.1.0 proof of concept: poc.md
