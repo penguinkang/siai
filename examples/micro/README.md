@@ -33,3 +33,22 @@ resolved package versions. Tests exercise actual sklearn, PyTorch and TRL, but
 do not yet route every project through a common trainer adapter. The LM project
 uses SFTTrainer directly; Unsloth remains covered only by mocked contract tests.
 No claim of cross-backend training equivalence or GPU compatibility is made.
+
+## Full TRL workflow
+
+`trl_workflow.py` exercises the current `master` contracts with actual CPU
+training: `SFTAdapter` → `ImprovementLoop` → `IntelligentProposer` →
+`OpenAIResponsesGenerator` → candidate training → selection → isolated final
+evaluation.
+
+```bash
+PYTHONPATH=src .venv/bin/python examples/micro/trl_workflow.py
+```
+
+The base model and tokenizer are created locally and every candidate starts from
+the same checkpoint. The provider transport is an injected deterministic
+Responses API fixture because this project must run without credentials. It
+validates the strict structured-output request and metadata path, but does not
+validate a live OpenAI request or proposer intelligence. Measured output is in
+`trl-workflow-result.json`; checkpoints and the full JSONL journal remain in a
+temporary directory and are not committed.

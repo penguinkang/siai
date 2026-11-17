@@ -1,0 +1,36 @@
+{
+  "project": "tiny-local-lm-trl-workflow",
+  "trainer": "trl.SFTTrainer",
+  "provider_transport": "offline injected Responses API fixture",
+  "versions": {
+    "torch": "2.15.0",
+    "transformers": "5.23.0",
+    "trl": "1.18.0",
+    "datasets": "5.2.0",
+    "openai": "3.52.0"
+  },
+  "baseline_search_reward": -1.822591781616211,
+  "proposed_search_reward": -1.6574504375457764,
+  "accepted": true,
+  "selected_config": {
+    "learning_rate": 0.003
+  },
+  "final_test_reward": -1.6511270999908447,
+  "evaluations": 2,
+  "provider_request": {
+    "strict_schema": true,
+    "store": false
+  },
+  "provider_metadata": {
+    "model": "offline-proposal-fixture",
+    "provider": "openai",
+    "response_id": "resp_offline_fixture",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1,
+      "output_tokens": 1,
+      "total_tokens": 2
+    }
+  },
+  "seed": 0
+}
