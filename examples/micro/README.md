@@ -31,8 +31,9 @@ comparative evidence of optimization performance. One fixed seed is used.
 results.json contains measured outputs; requirements.lock.txt records the local
 resolved package versions. Tests exercise actual sklearn, PyTorch and TRL, but
 do not yet route every project through a common trainer adapter. The LM project
-uses SFTTrainer directly; Unsloth remains covered only by mocked contract tests.
-No claim of cross-backend training equivalence or GPU compatibility is made.
+uses SFTTrainer directly. The separate full-workflow examples exercise the
+shared adapter with both TRL and Unsloth. No claim of cross-backend training
+equivalence or GPU compatibility is made.
 
 ## Full TRL workflow
 
@@ -52,3 +53,19 @@ validates the strict structured-output request and metadata path, but does not
 validate a live OpenAI request or proposer intelligence. Measured output is in
 `trl-workflow-result.json`; checkpoints and the full JSONL journal remain in a
 temporary directory and are not committed.
+
+## Full Unsloth workflow on Apple Silicon
+
+`unsloth_workflow.py` exercises the same package contracts with Unsloth's MLX
+trainer and a downloaded 135M parameter SmolLM2 checkpoint. Install current
+Unsloth in a separate Python 3.13 environment, then run:
+
+```bash
+PYTHONPATH=src /path/to/unsloth-venv/bin/python examples/micro/unsloth_workflow.py
+```
+
+The current MLX trainer trains, logs, and saves through the shared adapter, but
+does not expose TRL's public `evaluate()` method. The injected scorer therefore
+computes held-out cross-entropy directly from `trainer.model` and
+`trainer.tokenizer`. Measured output and exact versions are recorded in
+`unsloth-workflow-result.json`.

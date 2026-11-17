@@ -1,0 +1,39 @@
+{
+  "project": "smollm2-unsloth-mlx-workflow",
+  "trainer": "unsloth.UnslothTrainer",
+  "backend": "MLX",
+  "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "provider_transport": "offline injected Responses API fixture",
+  "versions": {
+    "unsloth": "2026.11.5",
+    "mlx": "0.32.4",
+    "transformers": "5.17.0",
+    "trl": "1.15.0",
+    "datasets": "4.8.5"
+  },
+  "baseline_search_reward": -5.949969291687012,
+  "proposed_search_reward": -5.491248846054077,
+  "accepted": true,
+  "selected_config": {
+    "learning_rate": 0.001
+  },
+  "final_test_reward": -5.40625,
+  "evaluations": 2,
+  "provider_request": {
+    "strict_schema": true,
+    "store": false
+  },
+  "provider_metadata": {
+    "model": "offline-proposal-fixture",
+    "provider": "openai",
+    "response_id": "resp_offline_fixture",
+    "status": "completed",
+    "usage": {
+      "input_tokens": 1,
+      "output_tokens": 1,
+      "total_tokens": 2
+    }
+  },
+  "seed": 0,
+  "compatibility_note": "The MLX trainer has no public evaluate method; the injected scorer computes cross-entropy directly from trainer.model and trainer.tokenizer."
+}
