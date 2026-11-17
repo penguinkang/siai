@@ -38,11 +38,13 @@ nav:
       - The improvement loop: concepts/improvement-loop.md
       - Design a model card: concepts/model-card.md
       - Build a proposer: guides/proposer.md
+      - Connect a model provider: guides/providers.md
       - Connect a trainer: guides/training.md
       - Run the full loop: guides/workflow.md
   - Reference:
       - Core experiment API: reference/core.md
       - Proposer API: reference/proposer.md
+      - Provider API: reference/providers.md
       - Training API: reference/training.md
       - Improvement workflow API: reference/workflow.md
       - Contracts and limitations: design.md

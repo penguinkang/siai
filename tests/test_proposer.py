@@ -1,5 +1,6 @@
 import json
 import unittest
+from dataclasses import dataclass
 from siai import Candidate, ModelCard, Observation, ProposalRequest, IntelligentProposer
 
 class ProposerTests(unittest.TestCase):
@@ -31,3 +32,19 @@ class ProposerTests(unittest.TestCase):
                         {'value': .001}, {'value': float('nan')}):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
                 IntelligentProposer(lambda p: json.dumps(base | changes)).propose(self.request())
+
+    def test_provider_metadata_is_attached_without_changing_model_contract(self):
+        @dataclass
+        class Metadata:
+            provider: str
+            model: str
+
+        class Generate:
+            last_metadata = Metadata("test", "model")
+
+            def __call__(self, prompt):
+                return self_outer.response()
+
+        self_outer = self
+        proposal = IntelligentProposer(Generate()).propose(self.request())
+        self.assertEqual(proposal.provider, {"model": "model", "provider": "test"})

@@ -1,5 +1,5 @@
 """Provider-neutral, single-call proposal contract; no trainer dependency."""
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 import json
 import math
 from typing import Callable
@@ -53,6 +53,7 @@ class Proposal:
     evidence_ids: tuple[str, ...]
     expected_effect: str
     verification: str
+    provider: dict | None = None
 
     def candidate(self, incumbent: Candidate) -> Candidate:
         config = json.loads(canonical(incumbent.config))
@@ -99,7 +100,11 @@ REQUEST:\n''' + canonical(asdict(request))
         cited = data['evidence_ids']
         if not isinstance(cited, list) or not cited or any(not isinstance(i, str) or i not in ids for i in cited):
             raise ValueError('proposal must cite known observation IDs')
-        proposal = Proposal(**{**data, 'evidence_ids': tuple(cited)})
+        metadata = getattr(self.generate, 'last_metadata', None)
+        if metadata is not None:
+            metadata = asdict(metadata) if is_dataclass(metadata) else metadata
+            metadata = json.loads(canonical(metadata))
+        proposal = Proposal(**{**data, 'evidence_ids': tuple(cited), 'provider': metadata})
         candidate = proposal.candidate(request.incumbent)
         if candidate.id == request.incumbent.id or any(candidate.id == h.get('candidate') for h in request.history):
             raise ValueError('proposal repeats an evaluated configuration')

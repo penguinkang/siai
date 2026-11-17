@@ -39,9 +39,9 @@ environments.
 
 !!! note "Development status"
     SIAI 0.1.0 is a prototype. The contracts, local experiment runner, and full
-    trainer-to-proposer workflow are implemented. Real-provider proposal
-    evaluation and full TRL/Unsloth training validation are active milestones.
-    No benchmark superiority is claimed.
+    trainer-to-proposer workflow, and optional OpenAI Responses adapter are
+    implemented. Live proposal evaluation and full TRL/Unsloth training
+    validation are active milestones. No benchmark superiority is claimed.
 
 ## A complete first experiment
 

@@ -7,11 +7,15 @@ name = "siai"
 version = "0.1.0"
 description = "Budgeted, auditable model improvement experiments"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.optional-dependencies]
 docs = [
     "mkdocs-material>=9.6,<10",
+]
+openai = [
+    "openai>=1.66",
 ]
 
 [project.scripts]

@@ -5,7 +5,13 @@ baseline first, proposes one change at a time, evaluates every candidate with
 paired seeds, and keeps only improvements.
 
 ```python
-from siai import Candidate, ImprovementLoop, IntelligentProposer, ModelCard
+from siai import (
+    Candidate,
+    ImprovementLoop,
+    IntelligentProposer,
+    ModelCard,
+    OpenAIResponsesGenerator,
+)
 from siai.training import SFTAdapter
 
 
@@ -21,7 +27,9 @@ card = ModelCard(
 )
 
 trainer = SFTAdapter(factory, score_search_split)
-proposer = IntelligentProposer(generate)
+proposer = IntelligentProposer(
+    OpenAIResponsesGenerator(model="your-supported-model")
+)
 
 result = ImprovementLoop(
     trainer,
@@ -72,4 +80,3 @@ not appear in observations, proposal history, or trainer scoring during search.
 The run directory must not already exist. Each trial gets a directory named
 `trial-NNN/seed-S`. This prevents accidental overwrites and makes every checkpoint
 traceable to a candidate and seed. Resume is not supported in v0.1.0.
-
