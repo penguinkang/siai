@@ -9,6 +9,11 @@ description = "Budgeted, auditable model improvement experiments"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 
+[project.optional-dependencies]
+docs = [
+    "mkdocs-material>=9.6,<10",
+]
+
 [project.scripts]
 siai = "siai.cli:main"
 
