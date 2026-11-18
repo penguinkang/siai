@@ -14,6 +14,10 @@ The proposer receives the incumbent, model card, observations, history, and
 remaining budget. It returns one lever change with a falsifiable hypothesis and
 citations to the evidence it used.
 
+SIAI compacts those inputs into a bounded decision packet before the provider
+call. This keeps failures, relevant metrics, and tested-lever outcomes visible
+without sending the growing JSONL journal on every iteration.
+
 ## Select
 
 Candidates are compared under paired seeds. A strict mean-score improvement over
@@ -36,4 +40,3 @@ count.
 An evaluation is one candidate/seed pair. The baseline consumes budget. A seed
 group starts only when enough budget remains to run the whole group. If a trial
 fails partway through, attempted evaluations still count.
-

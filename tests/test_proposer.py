@@ -1,7 +1,8 @@
 import json
 import unittest
 from dataclasses import dataclass
-from siai import Candidate, ModelCard, Observation, ProposalRequest, IntelligentProposer
+from siai import (Candidate, ModelCard, Observation, ProposalRequest,
+                  IntelligentProposer, build_proposal_context)
 
 class ProposerTests(unittest.TestCase):
     def request(self):
@@ -48,3 +49,47 @@ class ProposerTests(unittest.TestCase):
         self_outer = self
         proposal = IntelligentProposer(Generate()).propose(self.request())
         self.assertEqual(proposal.provider, {"model": "model", "provider": "test"})
+
+    def test_context_ranks_and_caps_evidence(self):
+        request = ProposalRequest(
+            self.request().card,
+            self.request().incumbent,
+            (
+                Observation('runtime', 'cost', 'Runtime seconds', 2.0),
+                Observation('accuracy', 'metric', 'QA accuracy regressed', .4),
+                Observation('oom', 'failure', 'Out of memory'),
+            ),
+        )
+        context = build_proposal_context(request, max_observations=2)
+        self.assertEqual([row['id'] for row in context['observations']], ['oom', 'accuracy'])
+        self.assertEqual(context['observation_count'], 3)
+        self.assertEqual(context['observations_omitted'], 1)
+
+    def test_context_summarizes_directional_experiment_gain(self):
+        card = ModelCard('Lower loss', 'loss', 'minimize', {'learning_rate': 'positive'})
+        history = (
+            {'type': 'trial', 'candidate': 'base', 'parent': None, 'mean': 2.0,
+             'accepted': True, 'errors': [], 'proposal': None},
+            {'type': 'trial', 'candidate': 'next', 'parent': 'base', 'mean': 1.5,
+             'accepted': True, 'errors': [],
+             'proposal': {'lever': 'learning_rate', 'value': .01, 'hypothesis': 'faster'}},
+        )
+        request = ProposalRequest(card, Candidate({'learning_rate': .01}),
+                                  (Observation('loss', 'metric', 'Loss', 1.5),), history)
+        context = build_proposal_context(request)
+        self.assertEqual(context['experiments'][1]['directional_gain'], .5)
+        self.assertEqual(context['experiments'][1]['lever'], 'learning_rate')
+
+    def test_prompt_uses_decision_packet(self):
+        captured = {}
+        def generate(prompt):
+            captured['context'] = json.loads(prompt.split('REQUEST:\n', 1)[1])
+            return self.response()
+        IntelligentProposer(generate, max_observations=1).propose(self.request())
+        self.assertIn('experiments', captured['context'])
+        self.assertNotIn('history', captured['context'])
+
+    def test_invalid_observation_limit(self):
+        for value in (0, -1, True, 1.5):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                IntelligentProposer(lambda _: self.response(), max_observations=value)
