@@ -140,6 +140,7 @@ def build_proposal_context(request: ProposalRequest, *, max_observations: int = 
         experiments.append({
             'candidate': row.get('candidate'),
             'parent': row.get('parent'),
+            'config': row.get('config', {}),
             'lever': proposal.get('lever'),
             'value': proposal.get('value'),
             'hypothesis': proposal.get('hypothesis'),

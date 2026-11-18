@@ -68,9 +68,11 @@ class ProposerTests(unittest.TestCase):
     def test_context_summarizes_directional_experiment_gain(self):
         card = ModelCard('Lower loss', 'loss', 'minimize', {'learning_rate': 'positive'})
         history = (
-            {'type': 'trial', 'candidate': 'base', 'parent': None, 'mean': 2.0,
+            {'type': 'trial', 'candidate': 'base', 'parent': None,
+             'config': {'learning_rate': .001}, 'mean': 2.0,
              'accepted': True, 'errors': [], 'proposal': None},
-            {'type': 'trial', 'candidate': 'next', 'parent': 'base', 'mean': 1.5,
+            {'type': 'trial', 'candidate': 'next', 'parent': 'base',
+             'config': {'learning_rate': .01}, 'mean': 1.5,
              'accepted': True, 'errors': [],
              'proposal': {'lever': 'learning_rate', 'value': .01, 'hypothesis': 'faster'}},
         )
@@ -79,6 +81,8 @@ class ProposerTests(unittest.TestCase):
         context = build_proposal_context(request)
         self.assertEqual(context['experiments'][1]['directional_gain'], .5)
         self.assertEqual(context['experiments'][1]['lever'], 'learning_rate')
+        self.assertEqual(context['experiments'][0]['config'], {'learning_rate': .001})
+        self.assertEqual(context['experiments'][1]['config'], {'learning_rate': .01})
 
     def test_prompt_uses_decision_packet(self):
         captured = {}
