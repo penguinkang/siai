@@ -1,0 +1,750 @@
+{
+  "benchmark": "equal-logical-training-budget proposer comparison",
+  "provider": "offline deterministic model fixture",
+  "interpretation": "Offline results validate orchestration and context ablation only; they do not measure LLM intelligence or establish proposer superiority.",
+  "protocol": {
+    "runs_per_task_strategy": 3,
+    "paired_seeds": [
+      0,
+      1
+    ],
+    "logical_evaluations_per_run": 8,
+    "final_evaluations_per_run": 1,
+    "selection_split": "search",
+    "final_split_visible_to_proposer": false
+  },
+  "records": [
+    {
+      "task": "decision_tree",
+      "family": "parametric statistical ML",
+      "strategy": "random",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.6582278481012658,
+        "mean_selected_search_reward": 0.9071729957805909,
+        "mean_search_gain": 0.24894514767932496,
+        "mean_final_test_reward": 0.8916666666666666,
+        "final_test_stddev": 0.028867513459481315,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.9556962025316456,
+          "search_gain": 0.2974683544303798,
+          "final_test_reward": 0.925,
+          "selected_config": {
+            "depth": 8
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.875,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.879746835443038,
+          "search_gain": 0.22151898734177222,
+          "final_test_reward": 0.875,
+          "selected_config": {
+            "depth": 6
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "decision_tree",
+      "family": "parametric statistical ML",
+      "strategy": "scripted",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.6582278481012658,
+        "mean_selected_search_reward": 0.8860759493670886,
+        "mean_search_gain": 0.2278481012658229,
+        "mean_final_test_reward": 0.875,
+        "final_test_stddev": 0.050000000000000044,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.825,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.875,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.925,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "decision_tree",
+      "family": "parametric statistical ML",
+      "strategy": "raw_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.6582278481012658,
+        "mean_selected_search_reward": 0.8860759493670886,
+        "mean_search_gain": 0.2278481012658229,
+        "mean_final_test_reward": 0.875,
+        "final_test_stddev": 0.050000000000000044,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 26415
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.825,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8805
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.875,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8805
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.925,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8805
+        }
+      ]
+    },
+    {
+      "task": "decision_tree",
+      "family": "parametric statistical ML",
+      "strategy": "compact_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.6582278481012658,
+        "mean_selected_search_reward": 0.8860759493670886,
+        "mean_search_gain": 0.2278481012658229,
+        "mean_final_test_reward": 0.875,
+        "final_test_stddev": 0.050000000000000044,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 24018
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.825,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8006
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.875,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8006
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.6582278481012658,
+          "selected_search_reward": 0.8860759493670887,
+          "search_gain": 0.2278481012658229,
+          "final_test_reward": 0.925,
+          "selected_config": {
+            "depth": 4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8006
+        }
+      ]
+    },
+    {
+      "task": "torch_mlp",
+      "family": "deep learning",
+      "strategy": "random",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.7300000190734863,
+        "mean_selected_search_reward": 0.9166666666666666,
+        "mean_search_gain": 0.18666664759318033,
+        "mean_final_test_reward": 0.899999996026357,
+        "final_test_stddev": 0.03999999165535343,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.9399999976158142,
+          "search_gain": 0.20999997854232788,
+          "final_test_reward": 0.9399999976158142,
+          "selected_config": {
+            "learning_rate": 0.02
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8600000143051147,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.9200000166893005,
+          "search_gain": 0.1899999976158142,
+          "final_test_reward": 0.8999999761581421,
+          "selected_config": {
+            "learning_rate": 0.01
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "torch_mlp",
+      "family": "deep learning",
+      "strategy": "scripted",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.7300000190734863,
+        "mean_selected_search_reward": 0.8899999856948853,
+        "mean_search_gain": 0.15999996662139893,
+        "mean_final_test_reward": 0.8599999944368998,
+        "final_test_stddev": 0.02000001072884346,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8799999952316284,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8600000143051147,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8399999737739563,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "torch_mlp",
+      "family": "deep learning",
+      "strategy": "raw_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.7300000190734863,
+        "mean_selected_search_reward": 0.8899999856948853,
+        "mean_search_gain": 0.15999996662139893,
+        "mean_final_test_reward": 0.8599999944368998,
+        "final_test_stddev": 0.02000001072884346,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 27642
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8799999952316284,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9214
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8600000143051147,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9214
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8399999737739563,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9214
+        }
+      ]
+    },
+    {
+      "task": "torch_mlp",
+      "family": "deep learning",
+      "strategy": "compact_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.7300000190734863,
+        "mean_selected_search_reward": 0.8899999856948853,
+        "mean_search_gain": 0.15999996662139893,
+        "mean_final_test_reward": 0.8599999944368998,
+        "final_test_stddev": 0.02000001072884346,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 25281
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8799999952316284,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8427
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8600000143051147,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8427
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.7300000190734863,
+          "selected_search_reward": 0.8899999856948853,
+          "search_gain": 0.15999996662139893,
+          "final_test_reward": 0.8399999737739563,
+          "selected_config": {
+            "learning_rate": 0.005
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8427
+        }
+      ]
+    },
+    {
+      "task": "classification_threshold",
+      "family": "inference configuration",
+      "strategy": "random",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.5882352941176471,
+        "mean_selected_search_reward": 0.6216931216931217,
+        "mean_search_gain": 0.03345782757547459,
+        "mean_final_test_reward": 0.518037518037518,
+        "final_test_stddev": 0.004998703629347368,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.5952380952380952,
+          "search_gain": 0.007002801120448154,
+          "final_test_reward": 0.5238095238095237,
+          "selected_config": {
+            "threshold": 0.3
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "classification_threshold",
+      "family": "inference configuration",
+      "strategy": "scripted",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.5882352941176471,
+        "mean_selected_search_reward": 0.6349206349206349,
+        "mean_search_gain": 0.04668534080298781,
+        "mean_final_test_reward": 0.5151515151515151,
+        "final_test_stddev": 0.0,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 0,
+        "prompt_chars": 0
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 0,
+          "prompt_chars": 0
+        }
+      ]
+    },
+    {
+      "task": "classification_threshold",
+      "family": "inference configuration",
+      "strategy": "raw_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.5882352941176471,
+        "mean_selected_search_reward": 0.6349206349206349,
+        "mean_search_gain": 0.04668534080298781,
+        "mean_final_test_reward": 0.5151515151515151,
+        "final_test_stddev": 0.0,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 27639
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9213
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9213
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 9213
+        }
+      ]
+    },
+    {
+      "task": "classification_threshold",
+      "family": "inference configuration",
+      "strategy": "compact_model",
+      "summary": {
+        "runs": 3,
+        "mean_baseline_search_reward": 0.5882352941176471,
+        "mean_selected_search_reward": 0.6349206349206349,
+        "mean_search_gain": 0.04668534080298781,
+        "mean_final_test_reward": 0.5151515151515151,
+        "final_test_stddev": 0.0,
+        "improved_search_runs": 3,
+        "logical_evaluations": 24,
+        "provider_calls": 9,
+        "prompt_chars": 25239
+      },
+      "runs": [
+        {
+          "run": 0,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8413
+        },
+        {
+          "run": 1,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8413
+        },
+        {
+          "run": 2,
+          "baseline_search_reward": 0.5882352941176471,
+          "selected_search_reward": 0.6349206349206349,
+          "search_gain": 0.04668534080298781,
+          "final_test_reward": 0.5151515151515151,
+          "selected_config": {
+            "threshold": 0.4
+          },
+          "logical_evaluations": 8,
+          "trials": 4,
+          "provider_calls": 3,
+          "prompt_chars": 8413
+        }
+      ]
+    }
+  ]
+}
