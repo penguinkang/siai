@@ -109,6 +109,6 @@ build_proposal_context(
 
 Returns the exact trainer-neutral decision packet used by
 `IntelligentProposer`. Prior journal rows are reduced to candidate, parent,
-lever, value, hypothesis, score, directional gain, named metrics, guardrail
+configuration, lever, value, hypothesis, score, directional gain, named metrics, guardrail
 status, acceptance, and errors.
 `directional_gain` is normalized so positive always means improvement.
