@@ -1,5 +1,6 @@
 """Optional training integrations. Importing SIAI never imports GPU libraries."""
-from dataclasses import dataclass
+from collections.abc import Mapping
+from dataclasses import dataclass, field
 import math
 from pathlib import Path
 import time
@@ -11,6 +12,7 @@ class TrainingResult:
     reward: float
     observations: tuple[Observation, ...]
     checkpoint: str
+    metrics: dict[str, float] = field(default_factory=dict)
 
 
 class SFTAdapter:
@@ -19,8 +21,9 @@ class SFTAdapter:
     factory(config, seed, output_dir) creates a FRESH trainer for every trial.
     scorer(trainer) returns the model-card reward on search data only.
     """
-    def __init__(self, factory, scorer):
+    def __init__(self, factory, scorer, metric_scorer=None):
         self.factory, self.scorer = factory, scorer
+        self.metric_scorer = metric_scorer
 
     def train(self, config, *, seed, output_dir):
         unknown = set(config) - {'learning_rate', 'warmup_ratio'}
@@ -41,6 +44,19 @@ class SFTAdapter:
         reward = float(self.scorer(trainer))
         if not math.isfinite(reward):
             raise ValueError('non-finite task reward')
+        raw_metrics = self.metric_scorer(trainer) if self.metric_scorer else {}
+        if not isinstance(raw_metrics, Mapping):
+            raise ValueError('metric_scorer must return a mapping')
+        metrics = {}
+        for name, raw_value in raw_metrics.items():
+            if not isinstance(name, str) or not name:
+                raise ValueError('metric names must be nonempty strings')
+            if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
+                raise ValueError(f'invalid metric {name}')
+            value = float(raw_value)
+            if not math.isfinite(value):
+                raise ValueError(f'invalid metric {name}')
+            metrics[name] = value
         observations = [Observation('reward', 'task', 'Model-card search reward', reward),
                         Observation('runtime', 'cost', 'Training and scoring seconds', time.monotonic()-start)]
         for index, row in enumerate(trainer.state.log_history):
@@ -51,7 +67,7 @@ class SFTAdapter:
                                                     f'{key} at step {row.get("step", "unknown")}', float(value)))
         checkpoint = str(path / 'checkpoint')
         trainer.save_model(checkpoint)
-        return TrainingResult(reward, tuple(observations), checkpoint)
+        return TrainingResult(reward, tuple(observations), checkpoint, metrics)
 
 
 def sft_factory(backend, model_name, train_dataset, *, max_steps=10, max_length=256):

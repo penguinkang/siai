@@ -27,12 +27,17 @@ class TrainingTests(unittest.TestCase):
                     'transformers': SimpleNamespace(set_seed=lambda s: None),
                     'unsloth': SimpleNamespace(FastLanguageModel=Fast)}
                 with patch.dict('sys.modules', modules):
-                    adapter = SFTAdapter(sft_factory(backend, 'model', []), lambda t: .7)
+                    adapter = SFTAdapter(
+                        sft_factory(backend, 'model', []),
+                        lambda t: .7,
+                        metric_scorer=lambda t: {'latency_ms': 4.5},
+                    )
                     result = adapter.train({'learning_rate': .001}, seed=1, output_dir=Path(d)/'trial')
                     self.assertEqual(result.reward, .7)
                     self.assertTrue(Path(result.checkpoint).exists())
                     self.assertEqual(calls[0]['args'].kw['learning_rate'], .001)
                     self.assertIn('log-0-loss', [o.id for o in result.observations])
+                    self.assertEqual(result.metrics, {'latency_ms': 4.5})
                     with self.assertRaises(FileExistsError):
                         adapter.train({}, seed=1, output_dir=Path(d)/'trial')
     def test_invalid_configuration_before_training(self):

@@ -23,7 +23,15 @@ def score(trainer):
     return metrics["exact_match"]
 
 
-adapter = SFTAdapter(factory, score)
+def guardrail_metrics(trainer):
+    metrics = evaluate_on_search_split(trainer.model)
+    return {
+        "latency_ms": metrics["latency_ms"],
+        "valid_output_rate": metrics["valid_output_rate"],
+    }
+
+
+adapter = SFTAdapter(factory, score, metric_scorer=guardrail_metrics)
 result = adapter.train(
     {"learning_rate": 2e-4, "warmup_ratio": 0.1},
     seed=0,
@@ -31,8 +39,8 @@ result = adapter.train(
 )
 ```
 
-`TrainingResult` contains the finite task reward, normalized observations from
-trainer logs, and the saved checkpoint path.
+`TrainingResult` contains the finite task reward, named search metrics,
+normalized observations from trainer logs, and the saved checkpoint path.
 
 ## Backend selection
 
@@ -52,6 +60,13 @@ environment, and initial checkpoint. It should validate every lever before GPU
 work and keep final-test credentials outside the search process.
 
 The current built-in adapter allows only `learning_rate` and `warmup_ratio`.
-Actual TRL/Unsloth compatibility remains provisional until version-pinned runs
-pass in supported environments.
+## Validated compatibility
 
+| Path | Environment | Validation |
+| --- | --- | --- |
+| TRL `SFTTrainer` | macOS, PyTorch/MPS | Full workflow with a local tiny model |
+| Unsloth `UnslothTrainer` | Apple Silicon, MLX | Full LoRA workflow with SmolLM2-135M |
+
+Exact versions and measured outputs live on `dev/micro-projects`. These runs
+validate the shared contract; they are not performance comparisons. CUDA and
+multi-GPU environments remain unvalidated.

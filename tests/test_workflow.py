@@ -6,6 +6,7 @@ from pathlib import Path
 from siai import (
     Candidate,
     ImprovementLoop,
+    MetricGuardrail,
     ModelCard,
     Observation,
     Proposal,
@@ -14,8 +15,9 @@ from siai.training import TrainingResult
 
 
 class FakeTrainer:
-    def __init__(self, fail_value=None):
+    def __init__(self, fail_value=None, metric_fn=None):
         self.fail_value = fail_value
+        self.metric_fn = metric_fn
         self.calls = []
 
     def train(self, config, *, seed, output_dir):
@@ -32,6 +34,7 @@ class FakeTrainer:
                 Observation("reward", "task", "Measured search reward", config["value"]),
             ),
             checkpoint=str(checkpoint),
+            metrics=self.metric_fn(config) if self.metric_fn else {},
         )
 
 
@@ -129,6 +132,47 @@ class ImprovementLoopTests(unittest.TestCase):
             row = json.loads((run_dir / "journal.jsonl").read_text())
             self.assertFalse(row["accepted"])
             self.assertEqual(row["observations"][0]["kind"], "failure")
+
+    def test_guardrail_rejects_primary_reward_improvement(self):
+        with tempfile.TemporaryDirectory() as temp:
+            card = ModelCard(
+                "Improve reward without excess latency",
+                "score",
+                "maximize",
+                {"value": "finite number"},
+                guardrails=(MetricGuardrail("latency_ms", "at_most", 5),),
+            )
+            result = ImprovementLoop(
+                FakeTrainer(metric_fn=lambda config: {"latency_ms": config["value"] * 4}),
+                ScriptedProposer([2]),
+                card,
+                evaluation_budget=2,
+                seeds=(0,),
+                run_dir=Path(temp) / "run",
+            ).run(Candidate({"value": 1}))
+            self.assertEqual(result.best.config, {"value": 1})
+            rows = [json.loads(line) for line in Path(result.journal).read_text().splitlines()]
+            self.assertEqual(rows[1]["mean"], 2)
+            self.assertEqual(rows[1]["metrics"], {"latency_ms": 8.0})
+            self.assertFalse(rows[1]["guardrails_passed"])
+            self.assertIn("latency_ms=8.0", rows[1]["guardrail_violations"][0])
+
+    def test_missing_required_guardrail_metric_aborts_baseline(self):
+        with tempfile.TemporaryDirectory() as temp:
+            card = ModelCard(
+                "Improve reward",
+                "score",
+                "maximize",
+                {"value": "finite number"},
+                guardrails=(MetricGuardrail("latency_ms", "at_most", 5),),
+            )
+            run_dir = Path(temp) / "run"
+            with self.assertRaisesRegex(RuntimeError, "baseline training failed"):
+                ImprovementLoop(
+                    FakeTrainer(), ScriptedProposer([]), card, seeds=(0,), run_dir=run_dir
+                ).run(Candidate({"value": 1}))
+            row = json.loads((run_dir / "journal.jsonl").read_text())
+            self.assertIn("missing guardrail metrics", row["errors"][0])
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ flowchart LR
 - **Evidence-grounded.** Every proposal cites observations produced by the
   current experiment.
 - **Controlled.** A proposal changes one allowlisted lever, within a fixed
-  evaluation budget.
+  evaluation budget, and must pass machine-enforced metric guardrails.
 - **Auditable.** Candidate fingerprints, lineage, scores, failures, and decisions
   are written to an append-only JSONL journal.
 
@@ -39,9 +39,10 @@ environments.
 
 !!! note "Development status"
     SIAI 0.1.0 is a prototype. The contracts, local experiment runner, and full
-    trainer-to-proposer workflow, and optional OpenAI Responses adapter are
-    implemented. Live proposal evaluation and full TRL/Unsloth training
-    validation are active milestones. No benchmark superiority is claimed.
+    trainer-to-proposer workflow, optional OpenAI Responses adapter, and real
+    TRL/Unsloth compatibility runs are implemented. A live credentialed provider
+    run and equal-budget proposer benchmarks remain milestones. No benchmark
+    superiority is claimed.
 
 ## A complete first experiment
 

@@ -9,6 +9,7 @@ from siai import (
     Candidate,
     ImprovementLoop,
     IntelligentProposer,
+    MetricGuardrail,
     ModelCard,
     OpenAIResponsesGenerator,
 )
@@ -24,9 +25,14 @@ card = ModelCard(
         "warmup_ratio": "float in [0, 1]",
     },
     constraints=("Keep optimizer steps and training data fixed",),
+    guardrails=(MetricGuardrail("latency_ms", "at_most", 100),),
 )
 
-trainer = SFTAdapter(factory, score_search_split)
+trainer = SFTAdapter(
+    factory,
+    score_search_split,
+    metric_scorer=lambda trainer: {"latency_ms": measure_latency(trainer)},
+)
 proposer = IntelligentProposer(
     OpenAIResponsesGenerator(model="your-supported-model")
 )
@@ -52,12 +58,19 @@ print(result.journal)
 
 1. The baseline is trained once per seed.
 2. Trainer observations are given stable trial-and-seed-prefixed IDs.
-3. The proposer receives the incumbent evidence, complete trial history, and
-   remaining evaluation budget.
+3. The proposer receives incumbent evidence, compact tested-lever history, and
+   the remaining evaluation budget.
 4. The proposed configuration is trained from fresh state with the same seeds.
-5. Mean model-card reward determines promotion or rejection.
-6. The complete proposal, scores, observations, checkpoints, errors, and decision
-   are appended to `journal.jsonl`.
+5. Mean model-card reward and guardrail metrics determine promotion or rejection.
+6. The complete proposal, scores, metrics, guardrail results, observations,
+   checkpoints, errors, and decision are appended to `journal.jsonl`.
+
+## Guardrail promotion
+
+A candidate replaces the incumbent only when its paired-seed primary reward
+improves by `min_gain` and every guardrail passes. A measured guardrail failure is
+a normal rejected trial. A missing or non-finite required metric is an evaluation
+error because eligibility cannot be determined.
 
 When a rejected candidate fails, its failure observation is supplied alongside
 the incumbent evidence for the next proposal. A failed baseline aborts because

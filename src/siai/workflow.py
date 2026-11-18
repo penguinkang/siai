@@ -1,6 +1,7 @@
 """End-to-end, trainer-independent model improvement workflow."""
 
 from dataclasses import asdict, dataclass
+from collections.abc import Mapping
 import json
 import math
 from pathlib import Path
@@ -125,8 +126,10 @@ class ImprovementLoop:
                 evaluations += candidate_eval["evaluations"]
                 trials += 1
                 candidate_score = candidate_eval["mean"]
-                accepted = candidate_score is not None and self._improved(
-                    candidate_score, incumbent_score
+                accepted = (
+                    candidate_score is not None
+                    and candidate_eval["guardrails_passed"]
+                    and self._improved(candidate_score, incumbent_score)
                 )
                 row = self._trial_row(
                     candidate,
@@ -162,6 +165,7 @@ class ImprovementLoop:
         observations: list[Observation] = []
         checkpoints: list[str] = []
         errors: list[str] = []
+        metric_samples: dict[str, list[float]] = {}
         evaluations = 0
 
         for seed in self.seeds:
@@ -176,8 +180,34 @@ class ImprovementLoop:
                 score = float(result.reward)
                 if not math.isfinite(score):
                     raise ValueError("non-finite model-card reward")
+                raw_metrics = getattr(result, "metrics", {})
+                if not isinstance(raw_metrics, Mapping):
+                    raise ValueError("training metrics must be a mapping")
+                metrics = {}
+                for name, raw_value in raw_metrics.items():
+                    if not isinstance(name, str) or not name:
+                        raise ValueError("metric names must be nonempty strings")
+                    if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
+                        raise ValueError(f"invalid metric {name}")
+                    value = float(raw_value)
+                    if not math.isfinite(value):
+                        raise ValueError(f"invalid metric {name}")
+                    metrics[name] = value
+                missing = [item.metric for item in self.card.guardrails if item.metric not in metrics]
+                if missing:
+                    raise ValueError(f"missing guardrail metrics: {missing}")
                 scores.append(score)
                 checkpoints.append(str(result.checkpoint))
+                for name, value in metrics.items():
+                    metric_samples.setdefault(name, []).append(value)
+                    observations.append(
+                        Observation(
+                            id=f"trial-{trial}-seed-{seed}-metric-{name}",
+                            kind="metric",
+                            summary=f"Model-card search metric {name}",
+                            value=value,
+                        )
+                    )
                 for index, observation in enumerate(result.observations):
                     observations.append(
                         Observation(
@@ -205,9 +235,34 @@ class ImprovementLoop:
             if not errors and len(scores) == len(self.seeds)
             else None
         )
+        metric_means = {
+            name: sum(values) / len(values)
+            for name, values in metric_samples.items()
+            if values
+        }
+        guardrails = []
+        for item in self.card.guardrails:
+            value = metric_means.get(item.metric)
+            passed = value is not None and item.passes(value)
+            guardrails.append({
+                "metric": item.metric,
+                "direction": item.direction,
+                "threshold": item.threshold,
+                "value": value,
+                "passed": passed,
+            })
+        violations = [
+            f"{item['metric']}={item['value']} must be {item['direction']} {item['threshold']}"
+            for item in guardrails
+            if not item["passed"]
+        ]
         return {
             "scores": scores,
             "mean": mean,
+            "metrics": metric_means,
+            "guardrails": guardrails,
+            "guardrails_passed": not errors and not violations,
+            "guardrail_violations": violations,
             "observations": observations,
             "checkpoints": checkpoints,
             "errors": errors,
@@ -239,6 +294,10 @@ class ImprovementLoop:
             "proposal": proposal,
             "scores": evaluation["scores"],
             "mean": evaluation["mean"],
+            "metrics": evaluation["metrics"],
+            "guardrails": evaluation["guardrails"],
+            "guardrails_passed": evaluation["guardrails_passed"],
+            "guardrail_violations": evaluation["guardrail_violations"],
             "observations": [asdict(item) for item in evaluation["observations"]],
             "checkpoints": evaluation["checkpoints"],
             "errors": evaluation["errors"],

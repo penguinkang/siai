@@ -39,7 +39,8 @@ trainer.train(config: dict, *, seed: int, output_dir: Path) -> TrainingResult
 ```
 
 Every call must create a fresh training run. The result supplies a finite reward,
-observations, and checkpoint path.
+observations, checkpoint path, and any named metrics required by model-card
+guardrails.
 
 ### Proposer contract
 
@@ -60,4 +61,7 @@ Creates `run_dir` exclusively and evaluates the baseline. A baseline failure or
 proposer error raises `RuntimeError` after recording evidence. Failed candidates
 are rejected. A repeated candidate records a duplicate event and stops the run.
 The next seed group is never started unless the remaining budget covers it.
-
+Named metrics are averaged across the completed paired seed group. A candidate
+must improve the primary reward and pass every guardrail to replace the incumbent.
+Missing required metrics make the evaluation fail; the error remains in the
+journal.
