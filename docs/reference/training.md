@@ -10,20 +10,24 @@ TrainingResult(
     reward: float,
     observations: tuple[Observation, ...],
     checkpoint: str,
+    metrics: dict[str, float] = {},
 )
 ```
 
 The finite model-card reward, extracted trainer observations, and saved checkpoint
-path.
+path. `metrics` contains finite named search metrics used by model-card
+guardrails.
 
 ## `SFTAdapter`
 
 ```python
-SFTAdapter(factory, scorer)
+SFTAdapter(factory, scorer, metric_scorer=None)
 ```
 
 `factory(config, seed, output_dir)` must create a fresh trainer. `scorer(trainer)`
 must return the finite search reward.
+When supplied, `metric_scorer(trainer)` returns a mapping of finite metric names
+to values. It runs after training alongside the primary scorer.
 
 ```python
 adapter.train(config, *, seed: int, output_dir: str | Path) -> TrainingResult

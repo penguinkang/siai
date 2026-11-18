@@ -63,7 +63,7 @@ results. Test evaluator tampering and reward exploitation when executing code.
 0.1 implements the minimal local kernel, not the full research agenda.
 Next: persisted checkpoint manifests and evaluator/data version digests;
 process-isolated runners with resource limits; an autoresearch adapter;
-LLM proposer adapters; immutable evaluator services; final-report protocol;
-paired uncertainty estimates and population search. Weight training, remote
+additional provider adapters; immutable evaluator services; final-report
+protocol; paired uncertainty estimates and population search. Weight training, remote
 execution and statistically justified promotion need separate implementation
 and validation. A callback split label is not a security boundary.

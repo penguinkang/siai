@@ -11,12 +11,27 @@ ModelCard(
     direction: str,
     levers: dict[str, str],
     constraints: tuple[str, ...] = (),
+    guardrails: tuple[MetricGuardrail, ...] = (),
 )
 ```
 
 `direction` is `"maximize"` or `"minimize"`. At least one lever is required.
 Lever descriptions and constraints guide the proposer; the trainer must enforce
 them.
+
+## `MetricGuardrail`
+
+```python
+MetricGuardrail(
+    metric: str,
+    direction: str,
+    threshold: float,
+)
+```
+
+`direction` is `"at_least"` or `"at_most"`; thresholds must be finite. Guardrail
+metric names must be unique within a model card. `passes(value)` applies the
+inclusive threshold.
 
 ## `Observation`
 
@@ -94,5 +109,6 @@ build_proposal_context(
 
 Returns the exact trainer-neutral decision packet used by
 `IntelligentProposer`. Prior journal rows are reduced to candidate, parent,
-lever, value, hypothesis, score, directional gain, acceptance, and errors.
+lever, value, hypothesis, score, directional gain, named metrics, guardrail
+status, acceptance, and errors.
 `directional_gain` is normalized so positive always means improvement.

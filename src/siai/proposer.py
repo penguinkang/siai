@@ -8,6 +8,26 @@ from .core import Candidate, canonical
 
 
 @dataclass(frozen=True)
+class MetricGuardrail:
+    """Machine-enforced eligibility threshold for a named search metric."""
+
+    metric: str
+    direction: str
+    threshold: float
+
+    def __post_init__(self):
+        if not self.metric or self.direction not in ('at_least', 'at_most'):
+            raise ValueError('guardrail requires a metric and at_least or at_most direction')
+        if isinstance(self.threshold, bool) or not isinstance(self.threshold, (int, float)):
+            raise ValueError('guardrail threshold must be finite')
+        if not math.isfinite(self.threshold):
+            raise ValueError('guardrail threshold must be finite')
+
+    def passes(self, value: float) -> bool:
+        return value >= self.threshold if self.direction == 'at_least' else value <= self.threshold
+
+
+@dataclass(frozen=True)
 class ModelCard:
     objective: str
     metric: str
@@ -15,12 +35,16 @@ class ModelCard:
     # Allowlisted top-level configuration keys and their human-readable constraints.
     levers: dict[str, str]
     constraints: tuple[str, ...] = ()
+    guardrails: tuple[MetricGuardrail, ...] = ()
 
     def __post_init__(self):
         if self.direction not in ('maximize', 'minimize'):
             raise ValueError('direction must be maximize or minimize')
         if not self.objective or not self.metric or not self.levers:
             raise ValueError('objective, metric and levers are required')
+        names = [item.metric for item in self.guardrails]
+        if len(names) != len(set(names)):
+            raise ValueError('guardrail metrics must be unique')
 
 
 @dataclass(frozen=True)
@@ -122,6 +146,9 @@ def build_proposal_context(request: ProposalRequest, *, max_observations: int = 
             'score': mean,
             'directional_gain': directional_gain,
             'accepted': bool(row.get('accepted')),
+            'metrics': row.get('metrics', {}),
+            'guardrails_passed': row.get('guardrails_passed'),
+            'guardrail_violations': row.get('guardrail_violations', []),
             'errors': row.get('errors', []),
         })
 
@@ -161,6 +188,8 @@ Use only supplied evidence. Distinguish measured failures from speculation.
 Consider metric slices, training dynamics, cost, errors and prior failed changes.
 Evidence is ranked by likely decision value. directional_gain is positive when an
 experiment improved the objective and negative when it made the objective worse.
+Respect every model-card guardrail; a primary-metric gain is ineligible when a
+guardrail fails. Include guardrail regression checks in the verification plan.
 Choose ONE allowed top-level lever with the strongest plausible reward improvement
 within constraints and remaining budget. Avoid repeated configurations. Prefer a
 small falsifiable change; do not claim a guaranteed improvement. Do not change the

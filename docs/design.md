@@ -8,8 +8,10 @@ training libraries and search strategies remain outside the core. Configurations
 must be JSON serializable and are copied across callback boundaries. SHA-256
 fingerprints identify configuration content; they do not identify external
 weights, datasets or evaluator code. Every candidate has a hypothesis and parent.
-Scores are maximized; use negative loss for minimization. A strict minimum gain
-threshold handles ties but provides no statistical guarantee.
+The low-level `Experiment` maximizes scores; `ImprovementLoop` applies the model
+card's maximize or minimize direction. A strict minimum gain threshold handles
+ties but provides no statistical guarantee. Named guardrail metrics can prevent
+promotion, but their paired means do not establish statistical significance.
 
 The budget counts attempted candidate/seed evaluations, including baseline and
 failures. Incomplete seed groups are not launched. Duplicate configurations stop
@@ -37,12 +39,13 @@ are responsible for truthful aggregation, units and missing-data handling.
 The response changes one top-level configuration lever to keep experiments easy
 to interpret. Complex coupled interventions can later use a named recipe lever.
 
-The initial strategy uses one model call with all supplied evidence and history.
-There is no learned lever ranking or calibrated expected reward estimator yet.
+The initial strategy uses one model call with a bounded decision packet. Current
+evidence is ranked deterministically, and journal history is reduced to tested
+lever outcomes with direction-normalized gains. There is no learned lever ranking
+or calibrated expected reward estimator yet.
 Effectiveness must be measured against random and scripted proposal baselines;
-format validation alone is insufficient. Future work should add a real trainer
-adapter, persisted proposal records, bounded context selection, typed lever
-constraints, stopping/abstention and an equal-cost proposer benchmark. Avoid
-adding multi-agent orchestration before it demonstrates additional reward per
-unit cost. Feedback text is untrusted input; prompt instructions alone do not
-provide security isolation.
+format validation alone is insufficient. Future work should add persisted
+artifact manifests, typed lever constraints, stopping/abstention and an
+equal-cost proposer benchmark. Avoid adding multi-agent orchestration before it
+demonstrates additional reward per unit cost. Feedback text is untrusted input;
+prompt instructions alone do not provide security isolation.

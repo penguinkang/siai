@@ -1,7 +1,7 @@
 import json
 import unittest
 from dataclasses import dataclass
-from siai import (Candidate, ModelCard, Observation, ProposalRequest,
+from siai import (Candidate, MetricGuardrail, ModelCard, Observation, ProposalRequest,
                   IntelligentProposer, build_proposal_context)
 
 class ProposerTests(unittest.TestCase):
@@ -93,3 +93,21 @@ class ProposerTests(unittest.TestCase):
         for value in (0, -1, True, 1.5):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 IntelligentProposer(lambda _: self.response(), max_observations=value)
+
+    def test_model_card_validates_guardrails(self):
+        card = ModelCard(
+            'Improve QA', 'accuracy', 'maximize', {'learning_rate': 'positive'},
+            guardrails=(MetricGuardrail('latency_ms', 'at_most', 100),),
+        )
+        self.assertTrue(card.guardrails[0].passes(99))
+        self.assertFalse(card.guardrails[0].passes(101))
+        with self.assertRaises(ValueError):
+            MetricGuardrail('latency_ms', 'lower', 100)
+        with self.assertRaises(ValueError):
+            ModelCard(
+                'Improve QA', 'accuracy', 'maximize', {'learning_rate': 'positive'},
+                guardrails=(
+                    MetricGuardrail('latency_ms', 'at_most', 100),
+                    MetricGuardrail('latency_ms', 'at_least', 1),
+                ),
+            )

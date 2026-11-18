@@ -1,9 +1,9 @@
 # v0.1.0 proof of concept: TRL SFTTrainer
 
 Decision (November 16, 2026): use Hugging Face TRL's SFTTrainer as the
-first integration target. Keep Unsloth as a subsequent acceleration option.
-This selects the integration target; it does not claim an implemented or
-validated TRL adapter.
+first integration target, with Unsloth as the acceleration path. Both now use
+the shared `SFTAdapter` contract and have completed real end-to-end training
+runs on the development examples branch.
 
 ## Why this target
 
@@ -46,7 +46,7 @@ fixed steps alone do not establish equal compute.
 5. Build ProposalRequest with the model card, incumbent, observations, attempted
    candidates and remaining budget. Persist the complete returned Proposal.
 6. Train the proposal, compare paired rewards and retain or reject the candidate.
-   Normalize minimizing objectives before using the existing maximizing kernel.
+   Apply the model-card direction and require every metric guardrail to pass.
 
 Custom reward scoring happens outside SFTTrainer's training loss. A dedicated
 adapter must bridge these observations into the intelligent proposer; the current
@@ -60,10 +60,12 @@ and a replayable fixed-seed configuration. Compare intelligent proposals with
 random and fixed scripted search under the same training and proposal budgets.
 Report reward versus total cost over multiple independent searches, including
 negative results. Effectiveness is an empirical milestone, not guaranteed by a
-successful smoke test. GPU training and provider integration remain outstanding.
+successful smoke test. GPU-specific validation and a live credentialed provider
+call remain outstanding.
 
-Update: both backend factories and a shared SFTAdapter are now implemented in
-siai.training, with real-training smoke scripts maintained on dev/micro-projects.
-Both construction paths pass mocked contract tests. Real training compatibility
-is pending provisioned backend environments; this supersedes the earlier
-statement that no adapter exists. Neither backend has a verified version pin yet.
+Update: both backend factories and a shared `SFTAdapter` are implemented in
+`siai.training`. The development branch records a real TRL run and a real
+Unsloth MLX run, including proposal transport, training, selection, checkpoint
+reload, and isolated final scoring. These are compatibility smoke tests, not an
+equal-compute comparison or evidence of proposer superiority. Exact versions are
+recorded beside each measured result on `dev/micro-projects`.
