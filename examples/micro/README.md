@@ -52,7 +52,8 @@ Responses API fixture because this project must run without credentials. It
 validates the strict structured-output request and metadata path, but does not
 validate a live OpenAI request or proposer intelligence. Measured output is in
 `trl-workflow-result.json`; checkpoints and the full JSONL journal remain in a
-temporary directory and are not committed.
+temporary directory and are not committed. The search loss is also returned as
+a named metric and checked by an executable model-card guardrail.
 
 ## Full Unsloth workflow on Apple Silicon
 
@@ -68,4 +69,5 @@ The current MLX trainer trains, logs, and saves through the shared adapter, but
 does not expose TRL's public `evaluate()` method. The injected scorer therefore
 computes held-out cross-entropy directly from `trainer.model` and
 `trainer.tokenizer`. Measured output and exact versions are recorded in
-`unsloth-workflow-result.json`.
+`unsloth-workflow-result.json`. The same held-out loss is recorded as a named
+metric so this path also validates guardrail aggregation and journaling.

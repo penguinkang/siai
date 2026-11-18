@@ -11,6 +11,13 @@
   },
   "baseline_search_reward": -1.822591781616211,
   "proposed_search_reward": -1.6574504375457764,
+  "baseline_metrics": {
+    "search_loss": 1.822591781616211
+  },
+  "proposed_metrics": {
+    "search_loss": 1.6574504375457764
+  },
+  "proposed_guardrails_passed": true,
   "accepted": true,
   "selected_config": {
     "learning_rate": 0.003

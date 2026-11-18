@@ -24,6 +24,7 @@ from siai import (
     Candidate,
     ImprovementLoop,
     IntelligentProposer,
+    MetricGuardrail,
     ModelCard,
     OpenAIResponsesGenerator,
 )
@@ -127,10 +128,17 @@ def main():
             max_length=16,
         )
 
-        def score_search(trainer):
-            return -float(trainer.evaluate(eval_dataset=search)["eval_loss"])
+        search_losses = {}
 
-        trainer = SFTAdapter(factory, score_search)
+        def score_search(trainer):
+            loss = float(trainer.evaluate(eval_dataset=search)["eval_loss"])
+            search_losses[id(trainer)] = loss
+            return -loss
+
+        def metric_search(trainer):
+            return {"search_loss": search_losses[id(trainer)]}
+
+        trainer = SFTAdapter(factory, score_search, metric_scorer=metric_search)
         responses = OfflineResponses()
         generate = OpenAIResponsesGenerator(
             "offline-proposal-fixture",
@@ -144,6 +152,7 @@ def main():
             direction="maximize",
             levers={"learning_rate": "float in (0, 0.01]"},
             constraints=("Keep model, data, steps, and evaluator fixed",),
+            guardrails=(MetricGuardrail("search_loss", "at_most", 10),),
         )
         run = ImprovementLoop(
             trainer,
@@ -168,6 +177,9 @@ def main():
             },
             "baseline_search_reward": rows[0]["mean"],
             "proposed_search_reward": rows[1]["mean"],
+            "baseline_metrics": rows[0]["metrics"],
+            "proposed_metrics": rows[1]["metrics"],
+            "proposed_guardrails_passed": rows[1]["guardrails_passed"],
             "accepted": rows[1]["accepted"],
             "selected_config": run.best.config,
             "final_test_reward": test_reward,
