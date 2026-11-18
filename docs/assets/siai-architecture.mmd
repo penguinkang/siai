@@ -1,0 +1,53 @@
+flowchart LR
+    subgraph APP["Research application"]
+        CARD["ModelCard\nobjective, primary metric, guardrails, levers"]
+        BASE["Baseline Candidate\nJSON configuration"]
+        SCORE["Task evaluator\nsearch metrics only"]
+        FINAL["Isolated final evaluator"]
+    end
+
+    subgraph SIAI["SIAI core"]
+        LOOP["ImprovementLoop\nbudget, paired seeds, selection"]
+        CONTEXT["Decision context\nranked evidence and compact history"]
+        PROPOSER["IntelligentProposer\none validated lever change"]
+        JOURNAL[("Append-only JSONL journal")]
+    end
+
+    subgraph ADAPTERS["Replaceable adapters"]
+        TRAINER["Trainer adapter\nTrainingResult contract"]
+        PROVIDER["Provider adapter\nstructured JSON contract"]
+    end
+
+    subgraph EXTERNAL["External systems"]
+        TRL["TRL SFTTrainer"]
+        UNSLOTH["Unsloth MLX / LoRA"]
+        OPENAI["OpenAI Responses API\nor compatible generator"]
+        ARTIFACTS["Checkpoints and artifacts"]
+    end
+
+    CARD --> LOOP
+    BASE --> LOOP
+    LOOP --> TRAINER
+    TRAINER --> TRL
+    TRAINER --> UNSLOTH
+    SCORE -->|"metric scorer"| TRAINER
+    TRAINER -->|"reward, metrics, observations, checkpoint"| LOOP
+    LOOP --> CONTEXT
+    CONTEXT --> PROPOSER
+    PROPOSER --> PROVIDER
+    PROVIDER --> OPENAI
+    OPENAI -->|"strict proposal JSON"| PROVIDER
+    PROVIDER --> PROPOSER
+    PROPOSER -->|"Proposal"| LOOP
+    TRAINER --> ARTIFACTS
+    LOOP --> JOURNAL
+    LOOP -->|"selected Candidate"| FINAL
+
+    classDef core fill:#D9F3EE,stroke:#087F5B,color:#12382F,stroke-width:2px
+    classDef adapter fill:#E7F0FF,stroke:#3B67B2,color:#183153,stroke-width:2px
+    classDef external fill:#F3F0FF,stroke:#7048B8,color:#34205C,stroke-width:1.5px
+    classDef boundary fill:#FFF4D6,stroke:#B7791F,color:#5F3B00,stroke-width:1.5px
+    class LOOP,CONTEXT,PROPOSER,JOURNAL core
+    class TRAINER,PROVIDER adapter
+    class TRL,UNSLOTH,OPENAI,ARTIFACTS external
+    class CARD,BASE,SCORE,FINAL boundary

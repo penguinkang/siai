@@ -49,6 +49,7 @@ nav:
       - Improvement workflow API: reference/workflow.md
       - Contracts and limitations: design.md
   - Project:
+      - Technical report: technical-report.md
       - v0.1.0 proof of concept: poc.md
       - Research and positioning: research.md
       - Contributing: contributing.md

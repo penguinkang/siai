@@ -52,6 +52,7 @@ print(result.best.config)
 - [End-to-end improvement workflow](docs/guides/workflow.md)
 - [API reference](docs/reference/core.md)
 - [Research and positioning](docs/research.md)
+- [Technical report and architecture](docs/technical-report.md)
 
 Build the complete searchable documentation locally:
 

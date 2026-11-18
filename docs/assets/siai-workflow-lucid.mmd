@@ -1,0 +1,41 @@
+flowchart TD
+    START(["Start improvement run"])
+    VALIDATE["Validate model card, seeds, budget, and baseline config"]
+    BASELINE["Train baseline from fresh state for each paired seed"]
+    BASEOK{"All baseline runs valid?"}
+    ABORT["Record failure and abort"]
+    AGGBASE["Aggregate primary reward and named guardrail metrics"]
+    WRITEBASE["Append baseline trial to JSONL journal"]
+    BUDGET{"Budget covers another complete seed group?"}
+    RESULT["Return selected candidate, score, counts, and journal path"]
+    CONTEXT["Build bounded decision packet\nrank evidence and summarize tested configs"]
+    GENERATE["Call provider once for strict proposal JSON"]
+    PROPOSALOK{"Proposal valid, allowlisted, evidence-cited, and untried?"}
+    PERROR["Record proposer error and stop"]
+    TRAIN["Train candidate from fresh state for each paired seed"]
+    AGG["Aggregate reward, diagnostics, metrics, failures, and checkpoints"]
+    ELIGIBLE{"Primary reward improves by min_gain\nand all guardrails pass?"}
+    ACCEPT["Promote candidate to incumbent"]
+    REJECT["Keep incumbent and retain failed-attempt evidence"]
+    WRITE["Append complete candidate trial to JSONL journal"]
+    FINAL["Application evaluates selected checkpoint once on isolated final data"]
+
+    START --> VALIDATE --> BASELINE --> BASEOK
+    BASEOK -->|"No"| ABORT
+    BASEOK -->|"Yes"| AGGBASE --> WRITEBASE --> BUDGET
+    BUDGET -->|"No"| RESULT --> FINAL
+    BUDGET -->|"Yes"| CONTEXT --> GENERATE --> PROPOSALOK
+    PROPOSALOK -->|"No"| PERROR
+    PROPOSALOK -->|"Yes"| TRAIN --> AGG --> ELIGIBLE
+    ELIGIBLE -->|"Yes"| ACCEPT --> WRITE
+    ELIGIBLE -->|"No"| REJECT --> WRITE
+    WRITE --> BUDGET
+
+    classDef action fill:#E7F0FF,stroke:#3B67B2,color:#183153,stroke-width:1.5px
+    classDef decision fill:#FFF4D6,stroke:#B7791F,color:#5F3B00,stroke-width:2px
+    classDef record fill:#D9F3EE,stroke:#087F5B,color:#12382F,stroke-width:1.5px
+    classDef stop fill:#FFE3E3,stroke:#C92A2A,color:#6B1010,stroke-width:1.5px
+    class VALIDATE,BASELINE,AGGBASE,CONTEXT,GENERATE,TRAIN,AGG,ACCEPT,REJECT,FINAL action
+    class BASEOK,BUDGET,PROPOSALOK,ELIGIBLE decision
+    class WRITEBASE,WRITE,RESULT record
+    class ABORT,PERROR stop
